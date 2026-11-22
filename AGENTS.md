@@ -19,8 +19,18 @@ down are preserved and still apply.
   on `feature/*`, `fix/*`, or `hotfix/*`. Do not commit directly to `master`. The initial bootstrap
   commit on `develop` is the only documented exception.
 - Use Conventional Commits per `docs/project/COMMITS.md` and `.git_commit_template.txt`.
-- **Never push, open or update a PR, change remotes, or rewrite published history without explicit
-  user authorization.** `git push` is ask-gated in `opencode.json`.
+- Manage routine Git and GitFlow autonomously: inspect status and remotes, fetch, safe pull, create
+  and switch branches, commit with Conventional Commits, push work branches to `origin`, open PRs
+  when a tool is available, merge validated `feature/*`/`fix/*` into `develop`, resolve simple
+  conflicts, and delete merged temporary branches. Follow `docs/project/GITFLOW.md` and
+  `docs/project/AGENT_WORKFLOW.md`.
+- Ask before force push or rewriting published history, destructive reset or discarding uncommitted
+  work, deleting unmerged branches, modifying or merging `master`, deleting or resetting databases
+  or persistent data, or overwriting original resources without a backup.
+- Do not change configured remotes unless the user asks; pushes to `origin` are part of the routine
+  flow.
+- Do not merge a gameplay change that needs in-game verification until the user confirms the result
+  in the WoW client. A successful compile is not validation.
 - Never commit secrets, credentials, `.env`, `conf/*.conf`, database dumps, build artifacts, logs,
   client data (`MPQ`, `DBC`, maps, vmaps, mmaps), or proprietary assets. See
   `docs/project/REPO_HYGIENE.md`.
@@ -113,7 +123,8 @@ follow each doc's own "Read also" list:
 - Reviewing a changeset or PR, or opening or updating a PR → `.agents/docs/code-review.md`
 - Self-reviewing, or opening or updating a PR → also `.agents/docs/self-review-rules.md`
 - Capturing a lesson or adding/updating agent docs → `.agents/docs/README.md`
-- Branching, committing, or opening a PR → `docs/project/GITFLOW.md` and `docs/project/COMMITS.md`
+- Branching, committing, pushing, merging, or opening a PR → `docs/project/GITFLOW.md` and
+  `docs/project/COMMITS.md`
 - Creating or changing a custom module → `docs/project/MODULES.md`
 - Making an architectural decision → `docs/project/DECISIONS.md`
 - Changing `opencode.json`, agent permissions, or the OpenCode workflow → `docs/project/OPENCODE.md`

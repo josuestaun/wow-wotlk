@@ -67,7 +67,8 @@ git remote add upstream https://github.com/azerothcore/azerothcore-wotlk.git
 git fetch upstream
 ```
 
-El remoto `origin` es el fork propio; `upstream` es AzerothCore. No hagas push sin autorización.
+El remoto `origin` es el fork propio; `upstream` es AzerothCore. El agente puede hacer push de ramas
+de trabajo a `origin`; los pushes a `master`, tags y releases requieren autorización.
 
 ## 5. Configurar con CMake
 

@@ -28,17 +28,55 @@ Si el modelo gratuito no está disponible, elige otro de la lista `opencode/*-fr
     "bash": {
       "*": "allow",
       "git push": "ask",
-      "git push *": "ask",
+      "git pull": "ask",
+      "git pull origin master*": "ask",
+      "git pull * master*": "ask",
+      "git switch master": "ask",
+      "git switch master *": "ask",
+      "git checkout master": "ask",
+      "git checkout master *": "ask",
+      "git push origin master": "ask",
+      "git push origin master *": "ask",
+      "git push * master": "ask",
+      "git push * master *": "ask",
+      "git push --tags*": "ask",
+      "git push * --tags*": "ask",
+      "git push --follow-tags*": "ask",
+      "git push * --follow-tags*": "ask",
+      "git tag *": "ask",
+      "git tag -l*": "allow",
+      "git tag --list*": "allow",
+      "git branch -D*": "ask",
+      "git push * --delete*": "ask",
+      "git push origin --delete feature/*": "allow",
+      "git push origin --delete fix/*": "allow",
+      "git restore *": "ask",
+      "git checkout -- *": "ask",
+      "git checkout .": "ask",
+      "git stash drop*": "ask",
+      "git stash clear*": "ask",
+      "gh release *": "ask",
       "git push --force*": "deny",
       "git push -f*": "deny",
+      "git push * --force*": "deny",
+      "git push * -f*": "deny",
+      "git push * +*": "deny",
+      "git push --mirror*": "deny",
       "git reset --hard*": "deny",
       "git clean -f*": "deny",
-      "git clean -*f*": "deny",
-      "git branch -D*": "ask"
+      "git clean -*f*": "deny"
     }
   },
   "watcher": {
-    "ignore": ["build/**", "out/**", "var/**", "env/dist/**", "env/user/**", "Data/**", "backups/**"]
+    "ignore": [
+      "build/**",
+      "out/**",
+      "var/**",
+      "env/dist/**",
+      "env/user/**",
+      "Data/**",
+      "backups/**"
+    ]
   }
 }
 ```
@@ -49,13 +87,24 @@ Notas:
   `action`/`resource`/`effect` y `shell` es de OpenCode 2 y **no valida** en la versión instalada.
 - Las reglas se evalúan en orden y **la última que coincide gana**. Por eso `"*": "allow"` va
   primero y las excepciones después.
-- `git push` y `git push *` piden autorización. Un push normal no se ejecuta sin intervención
-  humana.
-- `git reset --hard*`, `git clean -f*`, `git clean -*f*` y los force push se bloquean.
-- `git branch -D*` pide confirmación antes de borrar una rama.
+- `git push` sin argumentos pide confirmación para evitar publicar la rama equivocada. Los pushes
+  explícitos de ramas de trabajo (`git push -u origin feature/...`) están permitidos.
+- Los pushes a `master`, la creación de tags y las releases piden confirmación.
+- `git pull` sin argumentos pide confirmación; usa `git pull --ff-only origin develop`.
+- Force push, `git reset --hard`, `git clean -f*` y `git clean -*f*` se bloquean.
+- `git branch -D*` pide confirmación; `git branch -d` (solo ramas fusionadas) está permitido.
+- El borrado remoto de `feature/*` y `fix/*` está permitido; otros borrados remotos piden
+  confirmación.
+- `git restore *`, `git checkout -- *`, `git checkout .` y `git stash drop/clear` piden confirmación
+  para no perder cambios.
+- `git merge` está permitido para integrar `feature/*`/`fix/*` en `develop`; no lo ejecutes estando
+  en `master`.
+- `gh pr create`, `gh pr view`, `gh pr checks` y `gh pr merge` están permitidos si `gh` existe y está
+  autenticado. Un PR contra `master` requiere autorización.
 - El resto de operaciones usan la política por defecto de OpenCode (permitidas), salvo lectura de
   `.env`, que pide confirmación.
-- No uses `--auto` en este repositorio: saltaría las confirmaciones que protegen el push.
+- No uses `--auto` en este repositorio: saltaría las confirmaciones que protegen las operaciones
+  destructivas.
 - Valida siempre los cambios con `opencode.cmd debug config`.
 
 La configuración global del usuario está en `%USERPROFILE%\.config\opencode\opencode.jsonc`. No
@@ -129,7 +178,12 @@ corresponda.
 - No uses `--auto` para saltar permisos.
 - No ejecutes comandos destructivos (`git reset --hard`, `git clean -f*`, force push) aunque el
   agente los proponga; están denegados por configuración.
-- No hagas push, PR ni cambios de remoto sin autorización explícita.
+- Puedes hacer push de ramas de trabajo, abrir PRs y fusionar cambios validados en `develop` sin
+  autorización.
+- Pide autorización para force push o reescritura de historia, resets destructivos o descarte de
+  cambios, borrado de ramas no fusionadas, `master`, bases de datos o datos persistentes, y
+  sobrescritura de recursos originales sin respaldo.
+- No cambies los remotos configurados salvo que la tarea lo pida.
 - Si un comando falla por permisos, no rodees la regla: explica el bloqueo y pide autorización.
 
 ## Solución de problemas
@@ -139,6 +193,6 @@ corresponda.
 | `opencode.ps1` bloqueado | Usa `opencode.cmd` o ajusta la política de ejecución |
 | Modelo no disponible | Ejecuta `opencode.cmd models` y elige otro `*-free` |
 | Configuración ignorada | Ejecuta `opencode.cmd debug config` y revisa la ruta |
-| Permiso denegado inesperado | Revisa el orden de `permissions`; la última regla gana |
+| Permiso denegado inesperado | Revisa el orden de `permission.bash`; la última regla gana |
 | El agente no lee una guía | Enlázala desde `AGENTS.md` o ábrela explícitamente en la tarea |
 | Respuestas con contexto insuficiente | Divide la tarea y referencia los archivos concretos |

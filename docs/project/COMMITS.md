@@ -100,8 +100,9 @@ proyecto sin reemplazarla.
 
 ## Título de Pull Request
 
-Como las ramas `feature/*` y `fix/*` se integran con squash, el título del PR se convierte en el
-commit final. Debe cumplir el mismo formato:
+Como las ramas `feature/*` y `fix/*` se integran con squash (o fast-forward cuando no hay PR), el
+título del PR o el mensaje del commit de integración se convierte en el commit final. Debe cumplir el
+mismo formato:
 
 ```text
 feat(Project): Add local server setup documentation

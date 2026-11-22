@@ -116,7 +116,7 @@ Copia esta plantilla al final del archivo y usa el siguiente número libre:
 
 ## ADR-0008: OpenCode con modelo gratuito y permisos restrictivos
 
-- Estado: Aceptada
+- Estado: Reemplazada parcialmente por ADR-0012
 - Fecha: 2026-11-22
 - Contexto: se usa OpenCode como agente principal y no se quieren credenciales ni servicios de pago
   en el repositorio.
@@ -130,6 +130,8 @@ Copia esta plantilla al final del archivo y usa el siguiente número libre:
   se guardan en la configuración global de OpenCode, nunca en el repo.
 - Alternativas: modelo de pago (no deseado), configuración global única (menos reproducible para el
   proyecto).
+- Nota: ADR-0012 sustituye la política de push; el modelo gratuito, el esquema V1 y el bloqueo de
+  operaciones destructivas siguen vigentes.
 
 ## ADR-0009: Repositorio solo para código y documentación
 
@@ -169,3 +171,23 @@ Copia esta plantilla al final del archivo y usa el siguiente número libre:
   siendo compatibles con AzerothCore.
 - Alternativas: todo en inglés (menos natural para el autor), todo en español (dificulta futuras
   comparaciones con upstream).
+
+## ADR-0012: Autonomía Git supervisada y validación antes de integrar
+
+- Estado: Aceptada
+- Fecha: 2026-11-22
+- Contexto: el autor quiere centrarse en definir y validar gameplay sin aprobar cada operación Git
+  rutinaria. La política anterior exigía autorización para cada push y PR, lo que interrumpía el
+  trabajo.
+- Decisión: el agente puede consultar estado y remotos, hacer fetch y pull seguro, crear y cambiar
+  ramas, commitear, hacer push de ramas de trabajo a `origin`, abrir PRs si hay herramienta,
+  fusionar `feature/*` y `fix/*` validados en `develop`, resolver conflictos simples y borrar ramas
+  fusionadas. Requiere autorización para force push o reescritura de historia, reset destructivo o
+  descarte de cambios, borrado de ramas no fusionadas, `master`, bases de datos o datos persistentes,
+  y sobrescritura de recursos originales sin respaldo. Una compilación correcta no valida gameplay:
+  si hace falta probar en el cliente, se espera confirmación del usuario antes de integrar.
+- Consecuencias: menos interrupciones y más velocidad; la seguridad depende de los permisos, la
+  verificación y la disciplina del agente. `master`, los datos persistentes y las operaciones
+  destructivas siguen siendo manuales.
+- Alternativas: mantener autorización para cada push (más control, más fricción), autonomía total
+  sin límites (riesgo de pérdida de trabajo o datos).

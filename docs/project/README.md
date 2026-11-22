@@ -15,7 +15,7 @@ misiones y otros sistemas sin romper la compatibilidad con el núcleo original.
 
 | Fase | Estado |
 | --- | --- |
-| 0. Fundación documental y de agentes | Completada (pendiente push autorizado) |
+| 0. Fundación documental y de agentes | Completada (publicada en `origin/develop`) |
 | 1. Servidor local MVP | Pendiente |
 | 2. Base operativa (backups, actualizaciones) | Pendiente |
 | 3. Módulo propio base | Pendiente |
@@ -23,6 +23,10 @@ misiones y otros sistemas sin romper la compatibilidad con el núcleo original.
 
 No se ha instalado ninguna dependencia ni compilado el servidor todavía. No se ha modificado la
 lógica del juego.
+
+El agente gestiona el ciclo Git rutinario (ramas, commits, push, PR y merge a `develop`) sin
+aprobación individual; las operaciones destructivas y `master` requieren autorización. Ver
+[GITFLOW.md](GITFLOW.md) y [AGENT_WORKFLOW.md](AGENT_WORKFLOW.md).
 
 ## Documentación
 

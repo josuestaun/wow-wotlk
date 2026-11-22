@@ -14,7 +14,8 @@ juego.
 - [x] GitFlow ligero y Conventional Commits documentados.
 - [x] Estrategia de módulos y mínimo impacto en el núcleo.
 - [x] Reglas de higiene del repositorio y `.gitignore` ampliado.
-- [ ] Revisión del usuario y push autorizado de `develop`.
+- [x] Revisión del usuario y publicación de `develop` en `origin`.
+- [x] Autonomía Git rutinaria y límites de seguridad documentados.
 
 Criterio de aceptación: el repositorio tiene documentación navegable, reglas de agente claras y un
 flujo de ramas/commits/PR definido.
@@ -116,8 +117,8 @@ el arranque ni el login.
 Objetivo: congelar una versión estable y reproducible.
 
 - [ ] `develop` estable y probado.
-- [ ] PR de `develop` a `master`.
-- [ ] Tag `v0.1.0` y notas de release.
+- [ ] PR de `develop` a `master` (con autorización).
+- [ ] Tag `v0.1.0` y notas de release (con autorización).
 - [ ] Backup verificado.
 - [ ] Documentación actualizada.
 
