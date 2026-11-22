@@ -2,7 +2,41 @@
 
 AzerothCore is a C++ MMORPG server emulator for World of Warcraft 3.3.5a (WotLK), built with CMake, backed by MySQL.
 
-## Agent rules
+## Personal project context
+
+This repository is a personal WoW WotLK 3.3.5a project built on a fork of AzerothCore
+(`josuestaun/wow-wotlk`). Development happens on native Windows 10/11 (PowerShell 5.1), VS Code, and
+OpenCode; Docker and WSL2 are out of scope. The first goal is a working local server; the long-term
+goal is gameplay customization through modules, scripts, and SQL.
+
+Project documentation lives in `docs/project/` (human-facing, Spanish). Start at
+`docs/project/README.md`. The rules below are always active; the upstream AzerothCore rules further
+down are preserved and still apply.
+
+## Project agent rules
+
+- Follow `docs/project/GITFLOW.md`: `master` is stable, `develop` is integration, and work happens
+  on `feature/*`, `fix/*`, or `hotfix/*`. Do not commit directly to `master`. The initial bootstrap
+  commit on `develop` is the only documented exception.
+- Use Conventional Commits per `docs/project/COMMITS.md` and `.git_commit_template.txt`.
+- **Never push, open or update a PR, change remotes, or rewrite published history without explicit
+  user authorization.** `git push` is ask-gated in `opencode.json`.
+- Never commit secrets, credentials, `.env`, `conf/*.conf`, database dumps, build artifacts, logs,
+  client data (`MPQ`, `DBC`, maps, vmaps, mmaps), or proprietary assets. See
+  `docs/project/REPO_HYGIENE.md`.
+- Prefer data/SmartAI, content scripts, then modules over core edits. See `docs/project/MODULES.md`.
+  Any core change must be minimal, justified, and documented in `docs/project/DECISIONS.md`.
+- Do not modify game logic yet; the current milestone is infrastructure and a working local server.
+- Do not install server dependencies or build unless the user explicitly asks. When asked, read
+  `docs/project/INSTALL_WINDOWS.md` first.
+- Record new architectural decisions in `docs/project/DECISIONS.md` and scope changes in
+  `docs/project/ROADMAP.md`.
+- Keep upstream documentation and `.agents/docs/` intact unless the change is required and
+  explained. Credit upstream authors when porting code.
+- On Windows, use PowerShell 5.1 semantics: no `&&`, quote paths with spaces, and do not assume
+  `bash`, `make`, or `nproc`.
+
+## AzerothCore agent rules
 
 - **Do not configure or build unless explicitly asked.** Builds are slow and rarely needed for code changes.
 - **Never edit SQL files outside `data/sql/updates/pending_db_*/` unless explicitly requested.** `data/sql/base/`,
@@ -38,8 +72,24 @@ AzerothCore is a C++ MMORPG server emulator for World of Warcraft 3.3.5a (WotLK)
 
 ## Modules
 
-External modules live in `modules/`, each a subdir with its own `CMakeLists.txt`. Disable with
-`-DDISABLED_AC_MODULES="mod1;mod2"`. See `modules/how_to_make_a_module.md`.
+External modules live in `modules/`, each in its own subdir with a `src/` folder. Modern modules are
+auto-discovered; a `CMakeLists.txt` is optional and a `<ModuleName>.cmake` is only needed for advanced
+CMake integration. Disable with `-DDISABLED_AC_MODULES="mod1;mod2"`. See
+`modules/how_to_make_a_module.md` and `docs/project/MODULES.md`.
+
+## Project documentation
+
+- `docs/project/README.md` — index, conventions, and source-of-truth hierarchy.
+- `docs/project/ARCHITECTURE.md` — components, data flow, and extension points.
+- `docs/project/INSTALL_WINDOWS.md` — native Windows setup, build, database, and client data.
+- `docs/project/ROADMAP.md` — phases, acceptance criteria, and backlog.
+- `docs/project/DECISIONS.md` — ADR log; add an entry before a new architectural decision.
+- `docs/project/GITFLOW.md` — branches, PRs, releases, hotfixes, and upstream sync.
+- `docs/project/COMMITS.md` — Conventional Commits, scopes, and examples.
+- `docs/project/MODULES.md` — customization strategy and module layout.
+- `docs/project/REPO_HYGIENE.md` — secrets, binaries, local data, and proprietary assets.
+- `docs/project/OPENCODE.md` — OpenCode configuration, model, and permissions.
+- `docs/project/AGENT_WORKFLOW.md` — autonomy, verification, escalation, and reporting.
 
 ## Persisting lessons
 
@@ -63,3 +113,9 @@ follow each doc's own "Read also" list:
 - Reviewing a changeset or PR, or opening or updating a PR → `.agents/docs/code-review.md`
 - Self-reviewing, or opening or updating a PR → also `.agents/docs/self-review-rules.md`
 - Capturing a lesson or adding/updating agent docs → `.agents/docs/README.md`
+- Branching, committing, or opening a PR → `docs/project/GITFLOW.md` and `docs/project/COMMITS.md`
+- Creating or changing a custom module → `docs/project/MODULES.md`
+- Making an architectural decision → `docs/project/DECISIONS.md`
+- Changing `opencode.json`, agent permissions, or the OpenCode workflow → `docs/project/OPENCODE.md`
+- Committing, cleaning the tree, or adding local data → `docs/project/REPO_HYGIENE.md`
+- Installing, configuring, or building on Windows → `docs/project/INSTALL_WINDOWS.md`
