@@ -127,6 +127,41 @@ __pycache__/
 #
 # ==================
 
+# Project custom modules: track sources only, never their build output.
+!/modules/mod-*/
+
+# Local client data and extracted assets (never commit).
+/Data/
+/data/client/
+*.mpq
+*.MPQ
+*.dbc
+*.db2
+*.wdt
+*.adt
+*.wmo
+*.m2
+*.skin
+*.anim
+*.blp
+
+# Local database dumps and backups.
+/backups/
+*.dump
+*.sql.gz
+*.sql.bz2
+*.sql.zip
+
+# Local secrets and certificates.
+*.key
+*.pem
+*.pfx
+*.p12
+
+# Local logs and temporary artifacts.
+/logs/
+*.log
+
 # Live-stack e2e private / local tooling (scratch tests stay uncommitted)
 e2e/local/**
 !e2e/local/README.md
