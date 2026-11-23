@@ -3,7 +3,7 @@
 El roadmap se organiza por fases con un criterio de aceptación verificable. Una fase no se cierra
 hasta que su criterio se cumple y queda registrado en el commit o PR correspondiente.
 
-## Fase 0 — Fundación (actual)
+## Fase 0 — Fundación (completada)
 
 Objetivo: dejar el repositorio preparado para trabajar con agentes y GitFlow sin tocar la lógica del
 juego.
@@ -20,21 +20,23 @@ juego.
 Criterio de aceptación: el repositorio tiene documentación navegable, reglas de agente claras y un
 flujo de ramas/commits/PR definido.
 
-## Fase 1 — Servidor local MVP
+## Fase 1 — Servidor local MVP (actual)
 
 Objetivo: compilar y ejecutar un servidor local funcional.
 
-Entorno: pendiente de decidir entre Windows nativo y Docker (ADR-0013). Los pasos siguientes asumen
-Windows nativo y se ajustarán si se elige Docker.
+Entorno: Docker Desktop + WSL2 (ADR-0015) con almacenamiento en E: (ADR-0016). Procedimiento en
+[DOCKER.md](DOCKER.md).
 
-- [ ] Instalar Visual Studio 2022, CMake, MySQL 8.4, OpenSSL 3.x y Boost.
-- [ ] Configurar `BOOST_ROOT`, `OPENSSL_ROOT_DIR` y `MYSQL_ROOT_DIR`.
-- [ ] Configurar y compilar en `RelWithDebInfo` con `SCRIPTS=static` y `MODULES=static`.
-- [ ] Extraer o descargar `dbc`, `maps`, `vmaps`, `mmaps` y `cameras`.
-- [ ] Crear `acore_auth`, `acore_characters` y `acore_world`.
-- [ ] Configurar `authserver.conf` y `worldserver.conf`.
-- [ ] Arrancar ambos procesos y crear una cuenta GM.
-- [ ] Entrar al mundo con un personaje y verificar movimiento, combate básico y quests.
+- [x] Decidir el entorno de ejecución y documentarlo (ADR-0015/0016).
+- [x] Descargar el instalador oficial de Docker Desktop y crear el `.env` local.
+- [ ] Habilitar `SVM Mode` en la BIOS del MSI B450-A PRO y reiniciar.
+- [ ] Instalar WSL2 y Docker Desktop con data-root en `E:\Docker\wsl`.
+- [ ] Configurar recursos (8 CPUs, 12 GB RAM, 4 GB swap) y verificar el motor.
+- [ ] Construir las imágenes con `docker compose build`.
+- [ ] Arrancar el stack con `docker compose up -d` (importación y datos de cliente).
+- [ ] Crear una cuenta GM y ajustar el realm a `127.0.0.1:8085`.
+- [ ] Configurar `realmlist.wtf` del cliente 3.3.5a y entrar al mundo.
+- [ ] Verificar movimiento, combate básico y quests.
 
 Criterio de aceptación: un personaje nuevo puede iniciar sesión, moverse y completar una quest sin
 errores fatales en los logs.
@@ -125,7 +127,7 @@ Objetivo: congelar una versión estable y reproducible.
 - [ ] Backup verificado.
 - [ ] Documentación actualizada.
 
-Criterio de aceptación: `master` en `v0.1.0` arranca desde cero siguiendo `INSTALL_WINDOWS.md`.
+Criterio de aceptación: `master` en `v0.1.0` arranca desde cero siguiendo `DOCKER.md`.
 
 ## Backlog de ideas
 
@@ -144,5 +146,5 @@ Criterio de aceptación: `master` en `v0.1.0` arranca desde cero siguiendo `INST
 - Modificación o distribución del cliente.
 - Assets propietarios de Blizzard.
 - Reescrituras masivas del núcleo.
-- Presuponer Docker o WSL2 antes de decidir el entorno de ejecución.
+- Exponer el servidor a Internet o abrir puertos en el router.
 - Dependencias de pago o credenciales en el repositorio.

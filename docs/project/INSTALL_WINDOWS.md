@@ -1,5 +1,8 @@
 # Instalación y build en Windows nativo
 
+> Ruta alternativa. El entorno elegido del proyecto es Docker Desktop + WSL2; consulta
+> [DOCKER.md](DOCKER.md) primero. Esta guía se mantiene para quien prefiera Windows nativo.
+
 Esta guía cubre Windows 10/11 x64 con PowerShell 5.1, Visual Studio 2022 y VS Code. No usa Docker,
 WSL2 ni Git Bash para compilar. Git Bash solo es necesario si se ejecuta el generador de módulos
 `modules/create_module.sh`.

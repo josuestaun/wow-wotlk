@@ -194,7 +194,7 @@ Copia esta plantilla al final del archivo y usa el siguiente número libre:
 
 ## ADR-0013: Entorno de ejecución pendiente (Windows nativo o Docker)
 
-- Estado: Propuesta
+- Estado: Reemplazada por ADR-0015
 - Fecha: 2026-11-23
 - Contexto: ADR-0001 fijó Windows nativo, pero el autor todavía no ha decidido si usará Windows
   nativo o Docker. El objetivo inmediato es la fundación documental y de agentes, no compilar ni
@@ -224,3 +224,44 @@ Copia esta plantilla al final del archivo y usa el siguiente número libre:
   la skill real de `.agents/skills/`.
 - Alternativas: copiar todo a `.opencode/` (duplicación), depender solo de Claude/Copilot (no
   aplica), reescribir las guías en formato OpenCode (pierde compatibilidad con upstream).
+
+## ADR-0015: Docker Desktop + WSL2 como entorno de ejecución
+
+- Estado: Aceptada
+- Fecha: 2026-11-23
+- Contexto: el autor ha elegido Docker para el servidor local. El equipo es Windows 11 Home, con
+  Ryzen 7 3700X y 16 GB de RAM; la virtualización por hardware está disponible pero deshabilitada en
+  la BIOS. Windows Home solo permite contenedores Linux, y el backend recomendado por Docker es
+  WSL2. AzerothCore mantiene una infraestructura Docker oficial en el propio repositorio.
+- Decisión: usar Docker Desktop con backend WSL2 y los archivos Docker oficiales de AzerothCore
+  (`docker-compose.yml`, `apps/docker/*`). El servidor se construye desde este checkout con
+  `docker compose build` y se opera con `docker compose up -d`. Los puertos se publican solo en
+  `127.0.0.1`; no se abre el router ni se expone a Internet.
+- Consecuencias: se necesita habilitar `SVM Mode` en la BIOS y reiniciar, instalar WSL2 y Docker
+  Desktop, y reservar recursos (8 CPUs, 12 GB RAM, 4 GB swap). El build inicial es lento, pero el
+  entorno es reproducible y las actualizaciones de código se prueban reconstruyendo imágenes. La
+  instalación nativa de Windows queda como alternativa, no como ruta principal.
+- Alternativas: Windows nativo (ADR-0001/ADR-0013, más pasos manuales de dependencias), WSL2 sin
+  Docker (menos reproducible), Docker en otra máquina Linux (fuera del alcance local).
+
+## ADR-0016: Almacenamiento en E: y build reproducible con imágenes
+
+- Estado: Aceptada
+- Fecha: 2026-11-23
+- Contexto: C: tiene ~303 GB libres y E: ~745 GB; las imágenes, volúmenes, bases y datos de cliente
+  son grandes y conviene mantenerlos fuera de C:. El flujo de desarrollo exige recompilar C++,
+  módulos y SQL con frecuencia.
+- Decisión: instalar Docker Desktop con `--wsl-default-data-root=E:\Docker\wsl` y fijar el disk image
+  location en E:. Usar volúmenes nombrados para `ac-database` y `ac-client-data` (quedan dentro del
+  data-root en E:) y bind mounts en `env/dist/etc` y `env/dist/logs` del repo en E:. Compilar las
+  imágenes desde el checkout con `docker compose build` y etiquetarlas como `local`; no depender de
+  imágenes precompiladas de AzerothCore. Los datos de cliente se descargan con el contenedor oficial
+  desde `wowgaming/client-data` v20.0. El build usa MySQL 8.4 oficial y no la imagen de base
+  preimportada, para evitar desajustes de esquema con este checkout.
+- Consecuencias: C: no crece con imágenes ni bases; el entorno es reproducible y actualizable. El
+  primer build y la primera importación tardan; los builds posteriores reutilizan caché. El
+  desarrollo intensivo con bind mounts sobre E: puede ser lento, por lo que se documenta la opción de
+  clonar en WSL2 si hace falta.
+- Alternativas: data-root en C: (llena el disco del sistema), bind mounts para bases y datos (más
+  lentos y frágiles en Windows), imágenes precompiladas (riesgo de esquema desalineado), volúmenes
+  anónimos (difíciles de respaldar).
