@@ -8,7 +8,7 @@ sistemas sin romper la compatibilidad con el núcleo original.
 - Repositorio: `josuestaun/wow-wotlk`
 - Upstream previsto: `azerothcore/azerothcore-wotlk`
 - Entorno de trabajo: Windows 10/11 x64, PowerShell 5.1, VS Code, OpenCode
-- Entorno de ejecución: pendiente de decidir entre Windows nativo y Docker (ver ADR-0013)
+- Entorno de ejecución: Docker Desktop + WSL2 (ADR-0015); Windows nativo como alternativa
 - Fuera de alcance: servidores públicos, assets propietarios del cliente
 - Licencia del núcleo: GPL v2 (ver `LICENSE` y `AUTHORS`)
 
@@ -17,14 +17,15 @@ sistemas sin romper la compatibilidad con el núcleo original.
 | Fase | Estado |
 | --- | --- |
 | 0. Fundación documental y de agentes | Completada (publicada en `origin/develop`) |
-| 0b. Decisión de entorno (Windows nativo o Docker) | Pendiente (ADR-0013) |
-| 1. Servidor local MVP | Pendiente |
+| 0b. Decisión de entorno | Completada: Docker Desktop + WSL2 (ADR-0015) |
+| 1. Servidor local MVP | En curso: entorno preparado, pendiente de SVM/instalación |
 | 2. Base operativa (backups, actualizaciones) | Pendiente |
 | 3. Módulo propio base | Pendiente |
 | 4. Primer vertical de gameplay | Pendiente |
 
-No se ha instalado ninguna dependencia ni compilado el servidor todavía. No se ha modificado la
-lógica del juego.
+El entorno Docker está preparado (`.env` local, instalador y plan en [DOCKER.md](DOCKER.md)), pero
+todavía no se ha habilitado la virtualización en la BIOS ni instalado Docker Desktop. No se ha
+compilado el servidor ni modificado la lógica del juego.
 
 El agente gestiona el ciclo Git rutinario (ramas, commits, push, PR y merge a `develop`) sin
 aprobación individual; las operaciones destructivas y `master` requieren autorización. Ver
@@ -35,7 +36,8 @@ aprobación individual; las operaciones destructivas y `master` requieren autori
 | Documento | Cuándo leerlo |
 | --- | --- |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Antes de tocar código, módulos, base de datos o configuración |
-| [INSTALL_WINDOWS.md](INSTALL_WINDOWS.md) | Antes de instalar dependencias, compilar o ejecutar el servidor |
+| [DOCKER.md](DOCKER.md) | Antes de instalar, arrancar, parar o depurar el servidor con Docker |
+| [INSTALL_WINDOWS.md](INSTALL_WINDOWS.md) | Solo si se usa la alternativa de Windows nativo |
 | [ROADMAP.md](ROADMAP.md) | Para elegir la siguiente tarea o revisar el alcance |
 | [DECISIONS.md](DECISIONS.md) | Antes de tomar una decisión técnica o cambiar una ya tomada |
 | [GITFLOW.md](GITFLOW.md) | Antes de crear una rama, abrir un PR o preparar una release |
