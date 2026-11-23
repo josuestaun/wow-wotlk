@@ -156,6 +156,7 @@ Este último comando cambia la política del usuario; ejecútalo solo si lo enti
 - `plan`: útil para diseñar antes de tocar código; no edita archivos.
 - `explore`: búsquedas rápidas en el repositorio.
 - `general`: tareas de investigación y ejecución multi-paso.
+- `pr-reviewer`: subagente de solo lectura para revisar un PR o changeset.
 
 Buenas prácticas:
 
@@ -165,12 +166,42 @@ Buenas prácticas:
 - Revisa siempre el diff antes de aceptar un commit.
 - Para cambios de varios pasos, usa una lista de tareas y actualízala.
 
-## Skills y comandos
+## Skills y subagentes
 
-OpenCode descubre skills en `.opencode/skills/` y comandos en `.opencode/commands/`. El repositorio
-incluye skills de AzerothCore en `.agents/skills/`; no las dupliques sin necesidad. Si añades una
-skill propia, documenta su propósito y su trigger en `AGENTS.md` o en `.agents/docs/README.md` según
-corresponda.
+OpenCode 1.19.6 descubre, sin configuración adicional:
+
+- Skills en `.opencode/skills/`, y por compatibilidad en `.claude/skills/` y `.agents/skills/`.
+- Subagentes en `.opencode/agent/<nombre>.md` (V1, singular).
+
+El repositorio reutiliza los recursos originales de AzerothCore:
+
+- `generate-pr-description` se resuelve desde `.agents/skills/generate-pr-description/SKILL.md`.
+- `pr-reviewer` está en `.opencode/agent/pr-reviewer.md` y adapta el perfil de Copilot
+  `.github/agents/pr-reviewer.md`. Es un `subagent` de solo lectura que enruta a `AGENTS.md`,
+  `.agents/docs/code-review.md` y `.agents/docs/self-review-rules.md`.
+
+Comprobación:
+
+```powershell
+opencode.cmd agent list   # debe listar pr-reviewer (subagent)
+```
+
+Reglas:
+
+- No dupliques skills ni docs en `.opencode/`; enruta a `.agents/` y `AGENTS.md`.
+- Si necesitas sobrescribir una skill solo para OpenCode, crea la misma ID en `.opencode/skills/`;
+  la precedencia de OpenCode hace que gane.
+- Si añades una skill propia, documenta su propósito y su trigger en `AGENTS.md` o en
+  `.agents/docs/README.md` según corresponda.
+- No cambies `CLAUDE.md`, `.claude/` ni `.github/agents/`: son compatibilidad para otros agentes.
+
+### Limitación de symlinks en Windows
+
+`.claude/skills/generate-pr-description` está versionado como symlink, pero con
+`core.symlinks=false` Git lo descarga como archivo de texto. Claude Code no lo resuelve; OpenCode sí
+usa la skill real de `.agents/skills/`. Para Claude Code, activa Developer Mode o una shell elevada y
+ejecuta `git config core.symlinks true` antes de volver a hacer checkout del enlace. Ver
+[AGENT_RESOURCES.md](AGENT_RESOURCES.md).
 
 ## Seguridad
 

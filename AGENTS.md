@@ -5,9 +5,10 @@ AzerothCore is a C++ MMORPG server emulator for World of Warcraft 3.3.5a (WotLK)
 ## Personal project context
 
 This repository is a personal WoW WotLK 3.3.5a project built on a fork of AzerothCore
-(`josuestaun/wow-wotlk`). Development happens on native Windows 10/11 (PowerShell 5.1), VS Code, and
-OpenCode; Docker and WSL2 are out of scope. The first goal is a working local server; the long-term
-goal is gameplay customization through modules, scripts, and SQL.
+(`josuestaun/wow-wotlk`). Development happens on Windows 10/11 (PowerShell 5.1), VS Code, and
+OpenCode. The execution environment (native Windows or Docker) is pending a decision: do not assume,
+configure, or build either until the user decides. The first goal is a working local server; the
+long-term goal is gameplay customization through modules, scripts, and SQL.
 
 Project documentation lives in `docs/project/` (human-facing, Spanish). Start at
 `docs/project/README.md`. The rules below are always active; the upstream AzerothCore rules further
