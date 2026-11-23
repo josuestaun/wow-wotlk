@@ -2,13 +2,14 @@
 
 Repositorio personal basado en un fork de [AzerothCore](https://github.com/azerothcore/azerothcore-wotlk)
 para World of Warcraft 3.3.5a (WotLK). El objetivo inicial es compilar y ejecutar un servidor local
-funcional en Windows nativo; el objetivo a medio plazo es personalizar mecánicas, NPC, habilidades,
-misiones y otros sistemas sin romper la compatibilidad con el núcleo original.
+funcional; el objetivo a medio plazo es personalizar mecánicas, NPC, habilidades, misiones y otros
+sistemas sin romper la compatibilidad con el núcleo original.
 
 - Repositorio: `josuestaun/wow-wotlk`
-- Upstream: `azerothcore/azerothcore-wotlk`
-- Entorno: Windows 10/11 x64, PowerShell 5.1, VS Code, OpenCode
-- Fuera de alcance: Docker, WSL2, servidores públicos, assets propietarios del cliente
+- Upstream previsto: `azerothcore/azerothcore-wotlk`
+- Entorno de trabajo: Windows 10/11 x64, PowerShell 5.1, VS Code, OpenCode
+- Entorno de ejecución: pendiente de decidir entre Windows nativo y Docker (ver ADR-0013)
+- Fuera de alcance: servidores públicos, assets propietarios del cliente
 - Licencia del núcleo: GPL v2 (ver `LICENSE` y `AUTHORS`)
 
 ## Estado actual
@@ -16,6 +17,7 @@ misiones y otros sistemas sin romper la compatibilidad con el núcleo original.
 | Fase | Estado |
 | --- | --- |
 | 0. Fundación documental y de agentes | Completada (publicada en `origin/develop`) |
+| 0b. Decisión de entorno (Windows nativo o Docker) | Pendiente (ADR-0013) |
 | 1. Servidor local MVP | Pendiente |
 | 2. Base operativa (backups, actualizaciones) | Pendiente |
 | 3. Módulo propio base | Pendiente |
@@ -41,6 +43,7 @@ aprobación individual; las operaciones destructivas y `master` requieren autori
 | [MODULES.md](MODULES.md) | Antes de crear o modificar un módulo, script o SQL de contenido |
 | [REPO_HYGIENE.md](REPO_HYGIENE.md) | Antes de hacer `git add`, limpiar el árbol o añadir datos locales |
 | [OPENCODE.md](OPENCODE.md) | Para configurar o usar OpenCode en este repositorio |
+| [AGENT_RESOURCES.md](AGENT_RESOURCES.md) | Recursos de agentes heredados y su adaptación a OpenCode |
 | [AGENT_WORKFLOW.md](AGENT_WORKFLOW.md) | Para entender la autonomía, verificación y límites del agente |
 
 Las reglas de código de AzerothCore siguen viviendo en `.agents/docs/` y se enrutan desde
@@ -59,7 +62,9 @@ no las convenciones internas del núcleo.
 | `env/` | Entorno de instalación/ejecución local | Solo `env/dist/.gitkeep` |
 | `docs/project/` | Documentación de este proyecto | Sí |
 | `.agents/` | Guías de agentes de AzerothCore | Sí, sin cambios innecesarios |
-| `.github/` | CI y plantillas de GitHub | Sí |
+| `.opencode/` | Subagentes propios de OpenCode | Sí |
+| `.claude/` | Compatibilidad con Claude Code | Sí, sin cambios |
+| `.github/` | CI, plantillas y perfiles de Copilot | Sí |
 
 ## Convenciones documentales
 

@@ -24,6 +24,9 @@ flujo de ramas/commits/PR definido.
 
 Objetivo: compilar y ejecutar un servidor local funcional.
 
+Entorno: pendiente de decidir entre Windows nativo y Docker (ADR-0013). Los pasos siguientes asumen
+Windows nativo y se ajustarán si se elige Docker.
+
 - [ ] Instalar Visual Studio 2022, CMake, MySQL 8.4, OpenSSL 3.x y Boost.
 - [ ] Configurar `BOOST_ROOT`, `OPENSSL_ROOT_DIR` y `MYSQL_ROOT_DIR`.
 - [ ] Configurar y compilar en `RelWithDebInfo` con `SCRIPTS=static` y `MODULES=static`.
@@ -141,5 +144,5 @@ Criterio de aceptación: `master` en `v0.1.0` arranca desde cero siguiendo `INST
 - Modificación o distribución del cliente.
 - Assets propietarios de Blizzard.
 - Reescrituras masivas del núcleo.
-- Docker/WSL2 como requisito del flujo principal.
+- Presuponer Docker o WSL2 antes de decidir el entorno de ejecución.
 - Dependencias de pago o credenciales en el repositorio.

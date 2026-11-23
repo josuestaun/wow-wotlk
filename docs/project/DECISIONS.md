@@ -21,7 +21,7 @@ Copia esta plantilla al final del archivo y usa el siguiente número libre:
 
 ## ADR-0001: Windows nativo como entorno principal
 
-- Estado: Aceptada
+- Estado: Reemplazada por ADR-0013
 - Fecha: 2026-11-22
 - Contexto: el proyecto es personal, el equipo es una sola persona y se quiere evitar la complejidad
   de contenedores o subsistemas.
@@ -191,3 +191,36 @@ Copia esta plantilla al final del archivo y usa el siguiente número libre:
   destructivas siguen siendo manuales.
 - Alternativas: mantener autorización para cada push (más control, más fricción), autonomía total
   sin límites (riesgo de pérdida de trabajo o datos).
+
+## ADR-0013: Entorno de ejecución pendiente (Windows nativo o Docker)
+
+- Estado: Propuesta
+- Fecha: 2026-11-23
+- Contexto: ADR-0001 fijó Windows nativo, pero el autor todavía no ha decidido si usará Windows
+  nativo o Docker. El objetivo inmediato es la fundación documental y de agentes, no compilar ni
+  instalar dependencias.
+- Decisión: dejar la decisión pendiente. No se configura ni se documenta un build definitivo;
+  `INSTALL_WINDOWS.md` queda como opción provisional, no como decisión cerrada. Docker y WSL2 no se
+  adoptan ni se prohíben. Cuando se decida, se añadirá un ADR que la cierre y una guía del entorno
+  elegido.
+- Consecuencias: los documentos no deben asumir un entorno de ejecución; el trabajo se centra en
+  código, datos y agentes. La fase 1 del roadmap no empieza hasta cerrar esta decisión.
+- Alternativas: Windows nativo (ADR-0001, ahora provisional), Docker (más reproducible, añade
+  capas), WSL2 (no se considera como entorno principal).
+
+## ADR-0014: Reutilizar los recursos de agentes de AzerothCore en OpenCode
+
+- Estado: Aceptada
+- Fecha: 2026-11-23
+- Contexto: AzerothCore ya incluye `AGENTS.md`, `.agents/docs/`, `.agents/skills/` y perfiles para
+  Claude Code y GitHub Copilot. Copiarlos a `.opencode/` crearía dos copias que se desincronizan.
+- Decisión: OpenCode lee `AGENTS.md` y descubre las skills en `.agents/skills/`. Solo se añaden
+  recursos propios de OpenCode cuando no hay equivalente, como el subagente
+  `.opencode/agent/pr-reviewer.md`, que enruta a las mismas fuentes. Se conservan `CLAUDE.md`,
+  `.claude/` y `.github/` sin cambios. La configuración usa el esquema V1 de OpenCode 1.19.6
+  (`permission`, `.opencode/agent/` en singular).
+- Consecuencias: una sola copia de las reglas; las actualizaciones de upstream se conservan. El
+  symlink de `.claude/skills` no se resuelve en Windows con `core.symlinks=false`, pero OpenCode usa
+  la skill real de `.agents/skills/`.
+- Alternativas: copiar todo a `.opencode/` (duplicación), depender solo de Claude/Copilot (no
+  aplica), reescribir las guías en formato OpenCode (pierde compatibilidad con upstream).
