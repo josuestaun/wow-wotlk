@@ -212,43 +212,59 @@ UPDATE realmlist SET address='127.0.0.1', localAddress='127.0.0.1', port=8085;
 
 ## 7. Crear la cuenta de juego
 
-Adjunta la consola del worldserver:
+La imagen arranca con `AC_DISABLE_INTERACTIVE=1`, así que el worldserver no lee órdenes por `stdin`.
+`docker attach` tampoco funciona desde PowerShell sin TTY, y escribir en `/proc/1/fd/0` solo vuelca
+texto en la salida del contenedor. El método fiable es arrancar un worldserver efímero con la consola
+habilitada y canalizar las órdenes por `stdin`; antes hay que liberar el puerto 8085 parando el
+servicio:
 
 ```powershell
-docker attach ac-worldserver
+docker compose stop ac-worldserver
+@(
+  "account create <usuario> <contraseña>"
+  "account set gmlevel <usuario> 3 -1"
+  "server shutdown 1"
+) | docker compose run --rm --no-deps -T -e AC_DISABLE_INTERACTIVE=0 ac-worldserver worldserver
+docker compose start ac-worldserver
 ```
 
-Dentro:
+- `--no-deps`: usa la base de datos ya arrancada y no repite importación ni descarga de datos.
+- `-T`: sin TTY, imprescindible para que el pipe llegue a `stdin`.
+- `AC_DISABLE_INTERACTIVE=0`: reactiva la consola solo en ese contenedor efímero.
+- `server shutdown 1`: cierra el contenedor efímero al terminar.
 
-```text
-account create <usuario> <contraseña>
-account set gmlevel <usuario> 3 -1
-```
-
-Para salir de la consola sin matar el proceso: `Ctrl+P` y luego `Ctrl+Q`. No uses `Ctrl+C`.
-
-Si `docker attach` falla por no ser una TTY, usa Windows Terminal o, en Git Bash,
-`winpty docker attach ac-worldserver`. Como alternativa no interactiva:
+Verifica la cuenta y el nivel GM:
 
 ```powershell
-docker compose exec -T ac-worldserver bash -c 'echo "account create <usuario> <contraseña>" > /proc/1/fd/0'
+docker compose exec ac-database mysql -uroot -p `
+  -e "USE acore_auth; SELECT id,username,last_login FROM account; SELECT id,gmlevel,RealmID FROM account_access;"
 ```
+
+`last_login` se actualiza tras el primer login correcto. Si el login falla con
+`tried to login with invalid password`, revisa que la cuenta existe y que la contraseña es la misma
+(el núcleo convierte usuario y contraseña a mayúsculas).
 
 ## 8. Conectar el cliente WoW 3.3.5a
 
-Cliente detectado: `C:\Users\josue\Desktop\UltimoWoW esES` (build 12340). No se modifica ningún
-archivo del cliente sin autorización. Solo se necesita `realmlist.wtf` en la raíz del cliente:
-
-```text
-set realmlist 127.0.0.1
-```
-
-Procedimiento seguro (haz backup si ya existe):
+Cliente detectado: `C:\Users\josue\Desktop\UltimoWoW esES` (build 12340). Este cliente en español lee
+`Data\esES\realmlist.wtf`; el `realmlist.wtf` de la raíz solo se usa si no existe el localizado.
+Ajusta ambos (con backup previo) y el realm del `WTF\Config.wtf`:
 
 ```powershell
 $client = "C:\Users\josue\Desktop\UltimoWoW esES"
-Copy-Item "$client\realmlist.wtf" "$client\realmlist.wtf.bak" -ErrorAction SilentlyContinue
-Set-Content -LiteralPath "$client\realmlist.wtf" -Value "set realmlist 127.0.0.1" -Encoding ASCII
+foreach ($f in @("$client\realmlist.wtf", "$client\Data\esES\realmlist.wtf")) {
+  if (Test-Path -LiteralPath $f) {
+    Copy-Item -LiteralPath $f "$f.bak" -Force
+    Set-ItemProperty -LiteralPath $f -Name IsReadOnly -Value $false
+    Set-Content -LiteralPath $f -Value "set realmlist 127.0.0.1" -Encoding ASCII
+  }
+}
+$cfg = "$client\WTF\Config.wtf"
+if (Test-Path -LiteralPath $cfg) {
+  Copy-Item -LiteralPath $cfg "$cfg.bak" -Force
+  $lines = Get-Content -LiteralPath $cfg | Where-Object { $_ -notmatch '^SET realmList ' }
+  Set-Content -LiteralPath $cfg -Value ($lines + 'SET realmList "127.0.0.1"') -Encoding ASCII
+}
 ```
 
 Después inicia `Wow.exe`, entra con la cuenta creada y crea un personaje. No copies datos del

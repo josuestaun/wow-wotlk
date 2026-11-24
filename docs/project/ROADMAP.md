@@ -29,13 +29,14 @@ Entorno: Docker Desktop + WSL2 (ADR-0015) con almacenamiento en E: (ADR-0016). P
 
 - [x] Decidir el entorno de ejecución y documentarlo (ADR-0015/0016).
 - [x] Descargar el instalador oficial de Docker Desktop y crear el `.env` local.
-- [ ] Habilitar `SVM Mode` en la BIOS del MSI B450-A PRO y reiniciar.
-- [ ] Instalar WSL2 y Docker Desktop con data-root en `E:\Docker\wsl`.
-- [ ] Configurar recursos (8 CPUs, 12 GB RAM, 4 GB swap) y verificar el motor.
-- [ ] Construir las imágenes con `docker compose build`.
-- [ ] Arrancar el stack con `docker compose up -d` (importación y datos de cliente).
-- [ ] Crear una cuenta GM y ajustar el realm a `127.0.0.1:8085`.
-- [ ] Configurar `realmlist.wtf` del cliente 3.3.5a y entrar al mundo.
+- [x] Habilitar `SVM Mode` en la BIOS del MSI B450-A PRO y reiniciar.
+- [x] Instalar WSL2 y Docker Desktop con data-root en `E:\Docker\wsl`.
+- [x] Configurar recursos (8 CPUs, 12 GB RAM, 4 GB swap) y verificar el motor.
+- [x] Construir las imágenes con `docker compose build`.
+- [x] Arrancar el stack con `docker compose up -d` (importación y datos de cliente).
+- [x] Crear una cuenta GM y ajustar el realm a `127.0.0.1:8085`.
+- [ ] Configurar `realmlist.wtf` del cliente 3.3.5a y entrar al mundo (configurado; pendiente de
+  confirmar en el cliente).
 - [ ] Verificar movimiento, combate básico y quests.
 
 Criterio de aceptación: un personaje nuevo puede iniciar sesión, moverse y completar una quest sin
